@@ -638,6 +638,8 @@ svg{overflow:visible}
       panelTopRatio:.38,
       panelBottom:20,
       sidebarWidth:function(width){return Math.max(132,Math.min(164,width*.16));},
+      footerBracketScale:.7,
+      footerContentGap:8,
       toolbarGap:14,
       canvasBottom:26,
       headlineSize:function(width){return Math.max(44,Math.min(54,width*.05));},
@@ -977,13 +979,35 @@ svg{overflow:visible}
     setStageBox(toolDivider,panelBox.left+14,top+112,2,panelBox.height-166);
 
     var bottom=panelBox.top+panelBox.height;
-    setStageBox(bottomBracket,panelBox.left+13,bottom-61,48,58);
-    bottomBracket.style.transform='scale(.7)';
+    var bracketLeft=panelBox.left+13;
+    var bracketScale=tokens.footerBracketScale;
+    setStageBox(bottomBracket,bracketLeft,bottom-61,48,58);
+    bottomBracket.style.transform='scale('+bracketScale+')';
     bottomBracket.style.transformOrigin='0 0';
-    setStageBox(autosave,left+9,bottom-27);
+
+    var bracketPath=bottomBracket.querySelector('path:last-of-type');
+    var bracketPathBox=bracketPath.getBBox();
+    var bracketVisualRight=bracketLeft+
+      ((bracketPathBox.x+bracketPathBox.width)*bracketScale);
+    var footerContentLeft=bracketVisualRight+tokens.footerContentGap;
+
+    setStageBox(autosave,footerContentLeft,bottom-27);
     autosave.style.fontSize=px(8.5);
-    setStageBox(liveDot,left+63,bottom-22,6,6);
-    setStageBox(saveHatch,left+77,bottom-24,43,8);
+    var autosaveWidth=autosave.getBoundingClientRect().width;
+    setStageBox(
+      liveDot,
+      footerContentLeft+autosaveWidth+7,
+      bottom-22,
+      6,
+      6
+    );
+    setStageBox(
+      saveHatch,
+      footerContentLeft+autosaveWidth+21,
+      bottom-24,
+      43,
+      8
+    );
   }
 
   function currentStageBox(element){
